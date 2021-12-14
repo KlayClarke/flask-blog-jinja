@@ -54,8 +54,8 @@ def send_email(name, email, phone, message):
         connection.sendmail(from_addr=MY_EMAIL,
                             to_addrs=MY_EMAIL,
                             msg=f'Subject:Site Inquiry From {name}\n\n'
-                                f'Email: {email}, '
-                                f'Phone: {phone}, '
+                                f'Email: {email}\n, '
+                                f'Phone: {phone}\n, '
                                 f'Message: {message}')
 
 
