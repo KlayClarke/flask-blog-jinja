@@ -37,25 +37,26 @@ def about():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'GET':
-        contact_message = 'Contact Me'
-        return render_template('contact.html', message=contact_message)
+        return render_template('contact.html', message='Contact Me')
     elif request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
         message = request.form['message']
-        print(f'Name: {name}, Email: {email}, Phone: {phone}, Message: {message}')
-        success_message = 'Message successfully sent!'
-        with smtplib.SMTP('smtp.gmail.com') as connection:
-            connection.starttls()
-            connection.login(user=MY_EMAIL, password=MY_PASSWORD)
-            connection.sendmail(from_addr=MY_EMAIL,
-                                to_addrs=MY_EMAIL,
-                                msg=f'Subject:Site Inquiry From {name}\n\n'
-                                    f'Email: {email}, '
-                                    f'Phone: {phone}, '
-                                    f'Message: {message}')
-        return render_template('contact.html', message=success_message)
+        send_email(name=name, email=email, phone=phone, message=message)
+        return render_template('contact.html', message='Message successfully sent!')
+
+
+def send_email(name, email, phone, message):
+    with smtplib.SMTP('smtp.gmail.com') as connection:
+        connection.starttls()
+        connection.login(user=MY_EMAIL, password=MY_PASSWORD)
+        connection.sendmail(from_addr=MY_EMAIL,
+                            to_addrs=MY_EMAIL,
+                            msg=f'Subject:Site Inquiry From {name}\n\n'
+                                f'Email: {email}, '
+                                f'Phone: {phone}, '
+                                f'Message: {message}')
 
 
 if __name__ == '__main__':
