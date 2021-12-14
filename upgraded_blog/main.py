@@ -1,5 +1,10 @@
+import os
+import smtplib
 import requests
 from flask import Flask, render_template, request
+
+MY_EMAIL = os.environ.get('GMAIL_USERNAME')
+MY_PASSWORD = os.environ.get('GMAIL_PASSWORD')
 
 all_posts = requests.get(url='https://api.npoint.io/79848603f977d255ecf6').json()
 post_objects = []
@@ -41,6 +46,15 @@ def contact():
         message = request.form['message']
         print(f'Name: {name}, Email: {email}, Phone: {phone}, Message: {message}')
         success_message = 'Message successfully sent!'
+        with smtplib.SMTP('smtp.gmail.com') as connection:
+            connection.starttls()
+            connection.login(user=MY_EMAIL, password=MY_PASSWORD)
+            connection.sendmail(from_addr=MY_EMAIL,
+                                to_addrs=MY_EMAIL,
+                                msg=f'Subject:Site Inquiry From {name}\n\n'
+                                    f'Email: {email}, '
+                                    f'Phone: {phone}, '
+                                    f'Message: {message}')
         return render_template('contact.html', message=success_message)
 
 
